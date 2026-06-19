@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAFIA RUSSIA — Донат</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0c;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .donate-card {
+            background: #141416;
+            border: 1px solid rgba(255, 74, 0, 0.1);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .donate-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff4a00, #ff7300);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .donate-card h1 {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .donate-card h1 span { color: #ff4a00; }
+
+        .donate-card p {
+            color: #8c8c93;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #aaaaaa;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            background: #1c1c1f;
+            border: 1px solid #2a2a2e;
+            color: #ffffff;
+            font-size: 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #ff4a00;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 74, 0, 0.2);
+        }
+
+        /* Сервер жиектерінің түсі */
+        select.server-red { border-color: #ff3333 !important; }
+        select.server-blue { border-color: #3385ff !important; }
+        select.server-green { border-color: #2ecc71 !important; }
+
+        .btn-donate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #ff4a00, #ff7300);
+            border: none;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 74, 0, 0.3);
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-donate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 74, 0, 0.5);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: #ff4a00; }
+    </style>
+</head>
+<body>
+
+    <div class="donate-card">
+        <h1>ПОПОЛНЕНИЕ <span>БАЛАНСА</span></h1>
+        <p>Безопасно пополните счет вашего персонажа</p>
+
+        <form id="donateForm" onsubmit="handleDonate(event)">
+            <div class="form-group">
+                <label for="nickname">Введите Ваш ник (Имя_Фамилия)</label>
+                <input type="text" id="nickname" placeholder="Например: Persona_Green" required>
+            </div>
+
+            <div class="form-group">
+                <label for="server">Выберите server</label>
+                <select id="server" onchange="changeServerColor(this)" required>
+                    <option value="" disabled selected>Выбрать сервер...</option>
+                    <option value="RED" style="color: #ff3333;">🔴 01 | RED SERVER</option>
+                    <option value="BLUE" style="color: #3385ff;">🔵 02 | BLUE SERVER</option>
+                    <option value="GREEN" style="color: #2ecc71;">🟢 03 | GREEN SERVER</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Сумма пополнения (в рублях)</label>
+                <input type="number" id="amount" placeholder="Минимум: 50" min="50" required>
+            </div>
+
+            <button type="submit" class="btn-donate">Перейти к оплате</button>
+        </form>
+
+        <a href="index.html" class="back-link">← Назад</a>
+    </div>
+
+    <script>
+        // Сервер таңдалғанда жиек түсін өзгерту
+        function changeServerColor(select) {
+            select.className = ''; 
+            if(select.value === 'RED') select.classList.add('server-red');
+            if(select.value === 'BLUE') select.classList.add('server-blue');
+            if(select.value === 'GREEN') select.classList.add('server-green');
+        }
+
+        function handleDonate(event) {
+            event.preventDefault();
+            
+            const nick = document.getElementById('nickname').value;
+            const server = document.getElementById('server').value;
+            const amount = document.getElementById('amount').value;
+
+            // ========================================================
+            // ⚠️ ОСЫ ЖЕРГЕ ӨЗ ТЕЛЕГРАМ СІЛТЕМЕҢІЗДІ ЖАЗЫҢЫЗ:
+            // Мысалы: 'https://t.me' немесе бот сілтемесі
+            const telegramUrl = 'https://t.me'; 
+            // ========================================================
+
+            // Тексеру үшін браузер консоліне шығару (қажет емес, өшіруге болады)
+            console.log(`Донат: ${nick} | Сервер: ${server} | Сумма: ${amount}`);
+
+            // Тікелей Telegram-ға бағыттау
+            window.location.href = telegramUrl;
+        }
+    </script>
+
+</body>
+</html>
